@@ -6,9 +6,11 @@ A simple app for tracking Spirit Island Game Progress.
 # Backend
 Django DRF
 
+Uses Poetry for packages.  `poetry install` to setup everything then: 
+
 ```
 cd backend
-python manage.py runserver
+poetry run python manage.py runserver
 ```
 
 
