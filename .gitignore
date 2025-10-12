@@ -1,0 +1,28 @@
+# Root
+.env
+*.log
+__pycache__/
+*.py[cod]
+*.sqlite3
+
+# Django
+backend/staticfiles/
+backend/media/
+backend/.venv/
+backend/.mypy_cache/
+
+# Node / Vue
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# OS files
+.DS_Store
+Thumbs.db
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/.gitignore
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/SpiritIslandTracker.iml
+/.idea/vcs.xml
