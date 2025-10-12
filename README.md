@@ -13,7 +13,6 @@ cd backend
 poetry run python manage.py runserver
 ```
 
-
 # Frontend
 Vue 
 ```
