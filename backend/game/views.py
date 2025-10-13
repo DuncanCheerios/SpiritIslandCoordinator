@@ -47,3 +47,15 @@ class GameListAPIView(generics.ListAPIView):
 # Registration view
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
+
+
+class MeAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+        })

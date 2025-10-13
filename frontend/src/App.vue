@@ -1,22 +1,35 @@
 <template>
-  <div class="min-h-screen bg-gray-100 text-gray-900">
+  <div class="">
     <!-- Global header -->
-    <header class="bg-white shadow-md p-4">
-      <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <h1 class="text-xl font-bold">Spirit Island Coordinator</h1>
-        <div v-if="auth.isAuthenticated" class="text-gray-700">
-          Logged in as <span class="font-semibold">{{ auth.user?.username }}</span>
+    <header class="">
+
+      <!-- Navigation Bar -->
+      <nav class="navbar">
+        <div class="nav-left">
+          <router-link to="/" class="nav-brand">Spirit Island Coordinator</router-link>
+          <router-link to="/games" class="nav-link">Games</router-link>
+          <router-link to="/games/create" class="nav-link">Create Game</router-link>
         </div>
-      </div>
+        <div class="nav-right">
+          <template v-if="auth.isAuthenticated">
+            <span class="nav-user">Hello, {{ auth.user?.username }}</span>
+            <button class="nav-button" @click="auth.logout">Logout</button>
+          </template>
+          <template v-else>
+            <router-link to="/login" class="nav-link">Login</router-link>
+            <router-link to="/register" class="nav-link">Register</router-link>
+          </template>
+        </div>
+      </nav>
     </header>
 
     <!-- Main content -->
-    <main class="max-w-7xl mx-auto p-4">
+    <main class="">
       <router-view />
     </main>
 
     <!-- Optional footer -->
-    <footer class="mt-auto bg-white text-center p-4 border-t text-gray-500">
+    <footer class="">
       © 2025 Spirit Island Coordinator
     </footer>
   </div>
@@ -26,9 +39,62 @@
 import { useAuthStore } from './stores/auth'
 
 const auth = useAuthStore()
-auth.checkAuth() // ensure user state is loaded on app start
+auth.checkAuth()
 </script>
 
-<style>
-/* optional global styles */
+<style scoped>
+/* Navbar styling */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #222;
+  padding: 12px 24px;
+  color: white;
+}
+
+.nav-left, .nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.nav-brand {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-right: 20px;
+  color: white;
+  text-decoration: none;
+}
+
+.nav-link {
+  margin-right: 15px;
+  color: white;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.nav-user {
+  margin-right: 10px;
+}
+
+.nav-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.nav-button:hover {
+  background-color: #0056b3;
+}
+
+/* Main content area */
+.main-content {
+  padding: 20px;
+}
 </style>

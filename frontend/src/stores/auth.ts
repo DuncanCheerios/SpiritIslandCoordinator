@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import api from '../api/axios'
+import { jwtDecode } from "jwt-decode";
 
 interface User {
   username: string
@@ -32,11 +33,23 @@ export const useAuthStore = defineStore('auth', {
       this.isAuthenticated = false
     },
 
-    checkAuth() {
-      const token = localStorage.getItem('access_token')
-      this.isAuthenticated = !!token
-      if (this.isAuthenticated) {
-      }
-    },
+     async checkAuth() {
+       const token = localStorage.getItem("access_token")
+       if (!token) {
+         this.isAuthenticated = false
+         this.user = null
+         return
+       }
+
+       try {
+         const res = await api.get("me/")
+         this.user = res.data
+         this.isAuthenticated = true
+       } catch (err) {
+         console.error("Failed to fetch user info:", err)
+         this.user = null
+         this.isAuthenticated = false
+       }
+     }
   },
 })
