@@ -17,7 +17,7 @@
       </ul>
     </section>
 
-    <section class=""">
+    <section class="">
       <h2 class="">Game Notes</h2>
       <p class="">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet lacus enim.
