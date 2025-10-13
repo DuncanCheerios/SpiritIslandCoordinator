@@ -1,0 +1,30 @@
+# game/serializers.py
+from django.contrib.auth.models import User
+from rest_framework import serializers
+from .models import Game
+#
+# class PlayerSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Player
+#         fields = ['id', 'user', 'spirit_name']
+
+class GameSerializer(serializers.ModelSerializer):
+    # players = PlayerSerializer(many=True, read_only=True)  # nested players
+
+    class Meta:
+        model = Game
+        fields = ['id', 'name', 'date_created']
+
+# Serializer for creating new users
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+
+    def create(self, validated_data):
+        user = User(username=validated_data['username'])
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
