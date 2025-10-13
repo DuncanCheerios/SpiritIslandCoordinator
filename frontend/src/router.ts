@@ -6,13 +6,20 @@ import Home from './components/Home.vue'
 import GameList from './components/GameList.vue'
 import Login from './components/Login.vue'
 import Register from './components/Register.vue'
+import CreateGame from './components/CreateGame.vue'
 
 const routes: RouteRecordRaw[] = [
-  { path: '/', name: 'Home', component: Home, meta: { requiresAuth: true } },
-  { path: '/games', name: 'GameList', component: GameList, meta: { requiresAuth: true } },
-  { path: '/login', name: 'Login', component: Login },
-  { path: '/register', name: 'Register', component: Register },
-  { path: '/:catchAll(.*)', redirect: '/' },
+  {path: '/', name: 'Home', component: Home, meta: {requiresAuth: true}},
+  {path: '/games', name: 'GameList', component: GameList, meta: {requiresAuth: true}},
+  {path: '/login', name: 'Login', component: Login},
+  {path: '/register', name: 'Register', component: Register},
+  {path: '/:catchAll(.*)', redirect: '/'},
+  {
+    path: '/games/create',
+    name: 'CreateGame',
+    component: CreateGame,
+    meta: {requiresAuth: true},
+  }
 ]
 
 const router = createRouter({

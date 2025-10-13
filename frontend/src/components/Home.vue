@@ -14,13 +14,13 @@
       >
         View Active Games
       </router-link>
-
       <router-link
-        to="/games"
+        to="/games/create"
         class="bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600 transition"
       >
         Create New Game
       </router-link>
+
     </div>
 
     <div class="mt-8">
