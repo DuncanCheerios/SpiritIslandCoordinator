@@ -1,17 +1,17 @@
 <template>
-  <div class="max-w-md mx-auto mt-10">
-    <h2 class="text-2xl font-bold mb-4">Create a New Game</h2>
+  <div class="">
+    <h2 class="">Create a New Game</h2>
     <form @submit.prevent="submit">
       <input
         v-model="gameName"
         placeholder="Game Name"
-        class="border p-2 w-full mb-3"
+        class=""
       />
-      <button class="bg-green-500 text-white px-4 py-2 rounded w-full">
+      <button class="">
         Create Game
       </button>
     </form>
-    <p v-if="error" class="text-red-500 mt-2">{{ error }}</p>
+    <p v-if="error" class="">{{ error }}</p>
   </div>
 </template>
 

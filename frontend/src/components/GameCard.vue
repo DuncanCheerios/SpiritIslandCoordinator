@@ -1,18 +1,18 @@
 <!-- src/components/GameCard.vue -->
 <template>
-  <div class="bg-white rounded-lg shadow p-4 border hover:shadow-lg transition">
-    <h3 class="text-xl font-bold mb-2">{{ game.name }}</h3>
-    <p class="text-gray-600 mb-2">
+  <div class="">
+    <h3 class="">{{ game.name }}</h3>
+    <p class="">
       Players: {{ game.players?.length ?? 0 }}
     </p>
     <button
       v-if="!joined"
       @click="joinGame"
-      class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+      class=""
     >
       Join
     </button>
-    <span v-else class="text-green-500 font-semibold">Joined</span>
+    <span v-else class="">Joined</span>
   </div>
 </template>
 

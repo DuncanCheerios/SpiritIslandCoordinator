@@ -1,6 +1,6 @@
 <template>
-  <div class="game-list p-4">
-    <h2 class="text-2xl font-bold mb-4">Active Games</h2>
+  <div class="">
+    <h2 class="">Active Games</h2>
 
     <ul>
       <GameCard
@@ -11,7 +11,7 @@
       </GameCard>
     </ul>
 
-    <div v-if="games && games.length === 0" class="text-gray-500 mt-4">
+    <div v-if="games && games.length === 0" class="">
       No active games yet.
     </div>
   </div>

@@ -1,15 +1,15 @@
 <!-- src/components/Register.vue -->
 <template>
-  <div class="max-w-sm mx-auto mt-10">
-    <h2 class="text-2xl font-bold mb-4">Register</h2>
+  <div class="">
+    <h2 class="">Register</h2>
     <form @submit.prevent="submit">
-      <input v-model="username" placeholder="Username" class="border p-2 w-full mb-3" />
-      <input type="password" v-model="password" placeholder="Password" class="border p-2 w-full mb-3" />
-      <button class="bg-green-500 text-white px-4 py-2 rounded w-full mb-3">Register</button>
+      <input v-model="username" placeholder="Username" class="" />
+      <input type="password" v-model="password" placeholder="Password" class="" />
+      <button class="">Register</button>
     </form>
-    <p class="text-sm text-gray-600">
+    <p class="">
       Already have an account?
-      <router-link to="/login" class="text-blue-500 hover:underline">Login here</router-link>
+      <router-link to="/login" class="">Login here</router-link>
     </p>
   </div>
 </template>
