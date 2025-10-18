@@ -1,46 +1,36 @@
 <template>
-  <div class="">
-    <h1 class="">Game Details</h1>
+  <div class="game-detail">
+    <h2 v-if="game">{{ game.name }}</h2>
+    <p v-else>Loading game...</p>
 
-    <!-- Game info placeholder -->
-    <section class="">
-      <h2 class="">Game Name</h2>
-      <p class="">{{ game.name || 'Lorem Ipsum Game Name' }}</p>
-    </section>
-
-    <section class="">
-      <h2 class="">Players</h2>
-      <ul class="">
-        <li v-for="player in game.players || placeholderPlayers" :key="player.username">
+    <section v-if="game">
+      <h3>Players:</h3>
+      <ul>
+        <li v-for="player in game.players" :key="player.id">
           {{ player.username }}
         </li>
       </ul>
     </section>
 
-    <section class="">
-      <h2 class="">Game Notes</h2>
-      <p class="">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet lacus enim.
-        Nulla facilisi. Suspendisse potenti. Integer ac nunc non nisi scelerisque dictum.
-      </p>
+    <section>
+      <Collapsible>
+        <GameEventList />
+      </Collapsible>
     </section>
 
-    <section>
-      <h2 class="">Additional Info</h2>
-      <p class="">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec ipsum a leo gravida
-        tincidunt. Etiam vitae lorem non justo euismod tempus.
-      </p>
-    </section>
+
+    <p v-if="error" class="error">{{ error }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
 import api from '../api/axios'
+import GameEventList from "@/components/GameEventList.vue";
+import Collapsible from "@/components/Collapsible.vue";
 
 interface Player {
+  id: number
   username: string
 }
 
@@ -48,35 +38,28 @@ interface Game {
   id: number
   name: string
   players: Player[]
+  created_at: string
 }
 
-// Route param to fetch game ID
-const route = useRoute()
-const gameId = Number(route.params.id)
+const props = defineProps<{ gameId: string }>()
 
-const game = ref<Game>({
-  id: gameId,
-  name: '',
-  players: [],
-})
+const game = ref<Game | null>(null)   // <-- reactive storage for the API result
+const error = ref<string | null>(null)
 
-// Placeholder players for now
-const placeholderPlayers = [
-  { username: 'Alice' },
-  { username: 'Bob' },
-  { username: 'Charlie' },
-]
-
-// Optional: fetch game info from backend when ready
 onMounted(async () => {
-  // Uncomment when backend endpoint is available
-  // const res = await api.get(`games/${gameId}/`)
-  // game.value = res.data
-  game.value.name = 'Lorem Ipsum Game Name'
-  game.value.players = placeholderPlayers
+  try {
+    const res = await api.get(`games/${props.gameId}/`)
+    console.log(res)
+    game.value = res.data   // <-- store the result here
+  } catch (err: any) {
+    console.error(err)
+    error.value = 'Failed to load game'
+  }
 })
 </script>
 
 <style scoped>
-/* Optional additional styles */
+.error {
+  color: red;
+}
 </style>

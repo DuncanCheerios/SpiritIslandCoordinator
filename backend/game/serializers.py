@@ -1,4 +1,3 @@
-# game/serializers.py
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import Game, Player
@@ -11,11 +10,11 @@ class GameCreateSerializer(serializers.ModelSerializer):
 
 
 class PlayerSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username')
 
     class Meta:
         model = Player
-        fields = ['user', 'game']
-
+        fields = ['user', 'game', 'username']
 
 class GameSerializer(serializers.ModelSerializer):
     players = PlayerSerializer(many=True, read_only=True)  # nested players

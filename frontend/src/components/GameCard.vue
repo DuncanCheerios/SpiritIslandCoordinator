@@ -1,7 +1,13 @@
 <!-- src/components/GameCard.vue -->
 <template>
   <div class="">
-    <h3 class="">{{ game.name }}</h3>
+    <h3 class="">
+      <router-link :to="{
+          name: 'GameDetail',
+          params: { gameId: game.id },
+          state: { game },
+        }" class="nav-link">{{game.name}}</router-link>
+    </h3>
     <p class="">
       Players: {{ game.players?.length ?? 0 }}
     </p>

@@ -44,6 +44,11 @@ class GameListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
 
+class GameDetailView(generics.RetrieveAPIView):
+    queryset = Game.objects.all()
+    serializer_class = GameSerializer
+
+
 # Registration view
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer

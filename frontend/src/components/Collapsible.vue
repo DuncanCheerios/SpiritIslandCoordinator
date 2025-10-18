@@ -1,7 +1,7 @@
 <template>
   <div class="collapsible">
     <button class="toggle" @click="toggleOpen">
-      {{ isOpen ? 'Hide' : 'Show' }} Events
+      {{ isOpen ? 'Hide' : 'Show' }}
     </button>
 
     <transition name="collapse">
@@ -11,6 +11,13 @@
     </transition>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const isOpen = ref(true)
+const toggleOpen = () => (isOpen.value = !isOpen.value)
+</script>
 
 <style scoped>
 .collapse-enter-active,
@@ -25,7 +32,7 @@
 }
 .collapse-enter-to,
 .collapse-leave-from {
-  max-height: 500px;
+  max-height: 500px; /* large enough to fit content */
   opacity: 1;
 }
 </style>
