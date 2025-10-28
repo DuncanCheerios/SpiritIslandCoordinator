@@ -36,7 +36,6 @@ defineProps({
   display: block;
   margin: 0.5rem 0;
 
-    /* OR for bigger responsive images, uncomment below */
   max-width: 100%;
   height: auto;
   object-fit: contain;
