@@ -42,7 +42,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class FearCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = FearCard
-        fields = ['id', 'name', 'description', 'image_url', 'last_updated']
+        fields = ['id', 'name', 'description', 'image_url', 'last_updated', 'stage_one', 'stage_two', 'stage_three']
 
 
 class EventCardSerializer(serializers.ModelSerializer):

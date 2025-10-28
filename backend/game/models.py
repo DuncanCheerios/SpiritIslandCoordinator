@@ -54,6 +54,9 @@ class GameEvent(models.Model):
 class FearCard(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
+    stage_one = models.TextField(blank=True)
+    stage_two = models.TextField(blank=True)
+    stage_three = models.TextField(blank=True)
     image_url = models.URLField(blank=True)
     last_updated = models.DateTimeField(auto_now=True)
 
