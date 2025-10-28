@@ -3,8 +3,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Game, Player
-from .serializers import GameSerializer, RegisterSerializer, GameCreateSerializer
+from .models import Game, Player, GameEvent, FearCard, EventCard, InvaderCard
+from .serializers import GameSerializer, RegisterSerializer, GameCreateSerializer, GameEventSerializer, \
+    FearCardSerializer, EventCardSerializer, InvaderCardSerializer
 
 
 class GameCreateAPIView(generics.CreateAPIView):
@@ -64,3 +65,43 @@ class MeAPIView(APIView):
             "username": user.username,
             "email": user.email,
         })
+
+
+class GameEventListCreateView(generics.ListCreateAPIView):
+    serializer_class = GameEventSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return GameEvent.objects.filter(game_id=self.kwargs['game_id']).order_by('created_at')
+
+    def perform_create(self, serializer):
+        print('supsupsup')
+        serializer.save(game_id=self.kwargs['game_id'])
+
+
+# Optional detail view (GET /api/games/<id>/events/<event_id>/)
+class GameEventDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = GameEventSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return GameEvent.objects.filter(game_id=self.kwargs['game_id'])
+
+
+# Static lists for frontend dropdowns
+class FearCardListView(generics.ListAPIView):
+    queryset = FearCard.objects.all().order_by('name')
+    serializer_class = FearCardSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class EventCardListView(generics.ListAPIView):
+    queryset = EventCard.objects.all().order_by('name')
+    serializer_class = EventCardSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class InvaderCardListView(generics.ListAPIView):
+    queryset = InvaderCard.objects.all().order_by('name')
+    serializer_class = InvaderCardSerializer
+    permission_classes = [IsAuthenticated]

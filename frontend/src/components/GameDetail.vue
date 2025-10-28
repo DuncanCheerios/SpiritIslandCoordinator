@@ -14,7 +14,7 @@
 
     <section>
       <Collapsible>
-        <GameEventList />
+        <GameEventList :game-id="gameId"  />
       </Collapsible>
     </section>
 
@@ -49,7 +49,6 @@ const error = ref<string | null>(null)
 onMounted(async () => {
   try {
     const res = await api.get(`games/${props.gameId}/`)
-    console.log(res)
     game.value = res.data   // <-- store the result here
   } catch (err: any) {
     console.error(err)

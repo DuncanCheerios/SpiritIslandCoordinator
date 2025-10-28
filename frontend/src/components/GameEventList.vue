@@ -1,77 +1,241 @@
 <template>
-  <div class="event-list">
-    <h3 class="title">Game Log</h3>
-    <div class="event-container">
-      <div v-for="(event, index) in events" :key="index" class="event-item">
-        <div class="event-time">{{ event.time }}</div>
-        <div class="event-text">{{ event.description }}</div>
+  <div class="game-events">
+    <h2>Game Events</h2>
+
+    <!-- List of events -->
+    <div v-if="events.length" class="event-list">
+      <div
+        v-for="event in events"
+        :key="event.id"
+        class="event-card"
+      >
+        <strong>{{ event.typeLabel }}</strong> —
+        <span v-if="event.fear_card">{{ event.fear_card.name }}</span>
+        <span v-else-if="event.event_card">{{ event.event_card.name }}</span>
+        <span v-else-if="event.invader_card">{{event.description}} at {{ event.invader_card.name }}</span>
+        <span v-else>{{ event.title }}</span>
+        <small class="timestamp">({{ formatDate(event.created_at) }})</small>
       </div>
     </div>
+    <div v-else>
+      <p>No events yet.</p>
+    </div>
+
+    <hr />
+
+    <!-- Add new event -->
+    <h3>Add Event</h3>
+    <form @submit.prevent="createEvent">
+      <label>Type:</label>
+      <select v-model="newEvent.type" required>
+        <option disabled value="">Select type</option>
+        <option value="fear">Fear Card</option>
+        <option value="event">Event Card</option>
+        <option value="invader">Invader Card</option>
+        <option value="custom">Custom</option>
+      </select>
+
+      <!-- Fear Card select -->
+      <div v-if="newEvent.type === 'fear'">
+        <label>Fear Card:</label>
+        <select v-model="newEvent.fear_card_id" required>
+          <option disabled value="">Select card</option>
+          <option
+            v-for="card in fearCards"
+            :key="card.id"
+            :value="card.id"
+          >
+            {{ card.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Event Card select -->
+      <div v-if="newEvent.type === 'event'">
+        <label>Event Card:</label>
+        <select v-model="newEvent.event_card_id" required>
+          <option disabled value="">Select card</option>
+          <option
+            v-for="card in eventCards"
+            :key="card.id"
+            :value="card.id"
+          >
+            {{ card.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Event Card select -->
+      <div v-if="newEvent.type === 'invader'">
+        <label>Invader Action:</label>
+        <select v-model="newEvent.invader_card_id" required>
+          <option disabled value="">Select card</option>
+          <option
+            v-for="card in invaderCards"
+            :key="card.id"
+            :value="card.id"
+          >
+            {{ card.name }}
+          </option>
+        </select>
+        <label>Description:</label>
+        <textarea v-model="newEvent.description" placeholder="Ravage/Build/Explore/Etc" />
+      </div>
+
+      <!-- Custom Event -->
+      <div v-if="newEvent.type === 'custom'">
+        <label>Title:</label>
+        <input v-model="newEvent.title" placeholder="Custom event title" />
+        <label>Description:</label>
+        <textarea v-model="newEvent.description" placeholder="Describe what happened..." />
+      </div>
+
+      <button type="submit" :disabled="isSubmitting">Add</button>
+    </form>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
+<script setup>
+import { ref, onMounted, computed } from 'vue'
+import axios from 'axios'
+import api from "@/api/axios.js";
 
-interface GameEvent {
-  time: string
-  description: string
+// Props
+const props = defineProps({
+  gameId: {
+    type: Number,
+    required: true,
+  },
+})
+
+const events = ref([])
+const fearCards = ref([])
+const eventCards = ref([])
+const invaderCards = ref([])
+const isSubmitting = ref(false)
+
+// New event data
+const newEvent = ref({
+  type: '',
+  fear_card_id: null,
+  event_card_id: null,
+  invader_card_id: null,
+  title: '',
+  description: '',
+})
+
+// Load all data on mount
+onMounted(async () => {
+  await Promise.all([
+    loadEvents(),
+    loadFearCards(),
+    loadEventCards(),
+    loadInvaderCards(),
+  ])
+})
+
+async function loadEvents() {
+  const { data } = await api.get(`/games/${props.gameId}/events/`)
+  events.value = data.map(e => ({
+    ...e,
+    typeLabel: e.type.charAt(0).toUpperCase() + e.type.slice(1),
+  }))
 }
 
-const events = ref<GameEvent[]>([
-  { time: '00:01', description: 'Game started' },
-  { time: '00:05', description: 'Fear card drawn: Terror Spreads' },
-  { time: '00:08', description: 'Event card revealed: Sudden Ambush' },
-  { time: '00:12', description: 'Invader card played: Build in Wetlands' },
-  { time: '00:15', description: 'Power used: Lightning’s Swift Strike' },
-  { time: '00:18', description: 'Blight added to Jungle' },
-  { time: '00:22', description: 'Fear card drawn: Dahan Defend the Island' },
-  { time: '00:25', description: 'Event card revealed: Escalation!' },
-  { time: '00:30', description: 'Invader card played: Explore in Mountains' },
-])
+async function loadFearCards() {
+  const { data } = await api.get('/fearcards/')
+  fearCards.value = data
+}
+
+async function loadEventCards() {
+  const { data } = await api.get('/eventcards/')
+  eventCards.value = data
+}
+
+async function loadInvaderCards() {
+  const { data } = await api.get('/invadercards/')
+  invaderCards.value = data
+}
+
+async function createEvent() {
+  isSubmitting.value = true
+  try {
+    const payload = { type: newEvent.value.type }
+
+    if (newEvent.value.type === 'fear') {
+      payload.fear_card_id = newEvent.value.fear_card_id
+    } else if (newEvent.value.type === 'event') {
+      payload.event_card_id = newEvent.value.event_card_id
+    } else if (newEvent.value.type === 'invader') {
+      payload.invader_card_id = newEvent.value.invader_card_id
+      payload.description = newEvent.value.description
+    } else {
+      payload.title = newEvent.value.title
+      payload.description = newEvent.value.description
+    }
+
+    await api.post(`/games/${props.gameId}/events/`, payload)
+    await loadEvents()
+    resetForm()
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+function resetForm() {
+  newEvent.value = {
+    type: '',
+    fear_card_id: null,
+    event_card_id: null,
+    invader_card_id: null,
+    title: '',
+    description: '',
+  }
+}
+
+function formatDate(isoString) {
+  const d = new Date(isoString)
+  return d.toLocaleString()
+}
 </script>
 
 <style scoped>
-.event-list {
-  border: 1px solid #ccc;
-  border-radius: 8px;
+.game-events {
   padding: 1rem;
-  max-height: 300px; /* Adjust height as needed */
-  overflow-y: auto;  /* Makes it scrollable */
-  background-color: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
-
-.title {
+.event-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+.event-card {
+  background: #fafafa;
+  padding: 0.5rem;
+  border-radius: 6px;
   margin-bottom: 0.5rem;
-  font-size: 1.1rem;
-  font-weight: bold;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 0.25rem;
+  border: 1px solid #eee;
 }
-
-.event-container {
+.timestamp {
+  color: #666;
+  font-size: 0.8em;
+  margin-left: 0.5rem;
+}
+form {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
-
-.event-item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background: white;
-  border-radius: 4px;
-  padding: 0.5rem;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+select,
+input,
+textarea {
+  padding: 0.4rem;
+  font-size: 0.9rem;
 }
-
-.event-time {
-  font-size: 0.8rem;
-  color: #666;
-  width: 60px;
-}
-
-.event-text {
-  flex: 1;
+button {
+  align-self: start;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
 }
 </style>
