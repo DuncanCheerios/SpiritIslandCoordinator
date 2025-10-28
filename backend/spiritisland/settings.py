@@ -90,6 +90,9 @@ REST_FRAMEWORK = {
     )
 }
 
+MEDIA_ROOT = 'media'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Dev Settings!
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",

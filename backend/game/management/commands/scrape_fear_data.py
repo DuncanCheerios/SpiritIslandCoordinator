@@ -1,3 +1,6 @@
+import os
+
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from game.models import FearCard
 import requests
@@ -48,13 +51,17 @@ class Command(BaseCommand):
                 stage_text["stage_two"] = rows[3].find_all('td')[-1].get_text()
                 stage_text["stage_three"] = rows[4].find_all('td')[-1].get_text()
 
+                image_tag = card_soup.find("img")
+                image_url = "https://spiritislandwiki.com" + image_tag.get('src')
+
+                local_image_path = download_image(image_url, name)
                 FearCard.objects.update_or_create(
                     name=name,
                     defaults={
                         "stage_one": stage_text["stage_one"],
                         "stage_two": stage_text["stage_two"],
                         "stage_three": stage_text["stage_three"],
-                        "image_url": image_url,
+                        "image": local_image_path,
                     }
                 )
                 self.stdout.write(f"Updated {name}")
@@ -62,3 +69,18 @@ class Command(BaseCommand):
 
             except Exception as e:
                 self.stderr.write(f"Failed to fetch {name}: {e}")
+
+
+def download_image(image_url, card_name):
+    if not image_url:
+        return None
+    filename = card_name.replace(" ", "_") + os.path.splitext(image_url)[-1]
+    local_path = os.path.join(settings.MEDIA_ROOT, 'fear_cards', filename)
+    os.makedirs(os.path.dirname(local_path), exist_ok=True)
+    resp = requests.get(image_url, stream=True)
+    if resp.status_code == 200:
+        with open(local_path, 'wb') as f:
+            for chunk in resp.iter_content(1024):
+                f.write(chunk)
+        return f'fear_cards/{filename}'
+    return None

@@ -64,7 +64,7 @@ class FearCard(models.Model):
     stage_one = models.TextField(blank=True)
     stage_two = models.TextField(blank=True)
     stage_three = models.TextField(blank=True)
-    image_url = models.URLField(blank=True)
+    image = models.ImageField(upload_to='fear_cards/', blank=True, null=True)
     last_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):

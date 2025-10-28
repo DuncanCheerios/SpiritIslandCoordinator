@@ -40,6 +40,14 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class FearCardSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
+
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        if obj.image and request:
+            return request.build_absolute_uri(obj.image.url)
+        return None
+
     class Meta:
         model = FearCard
         fields = ['id', 'name', 'description', 'image_url', 'last_updated', 'stage_one', 'stage_two', 'stage_three']

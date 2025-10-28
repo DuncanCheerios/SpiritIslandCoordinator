@@ -3,9 +3,9 @@
     <h4>{{ card.name }}</h4>
     <img v-if="card.image_url" :src="card.image_url" alt="" class="card-image" />
     <div class="stages">
-      <p :class="{ highlighted: highlightStage === '1' }"><strong>Stage 1:</strong> {{ card.stage_one }}</p>
-      <p :class="{ highlighted: highlightStage === '2' }"><strong>Stage 2:</strong> {{ card.stage_two }}</p>
-      <p :class="{ highlighted: highlightStage === '3' }"><strong>Stage 3:</strong> {{ card.stage_three }}</p>
+      <p v-if="highlightStage === '1'" class="highlighted"><strong>Stage 1:</strong> {{ card.stage_one }}</p>
+      <p v-if="highlightStage === '2'" class="highlighted"><strong>Stage 2:</strong> {{ card.stage_two }}</p>
+      <p v-if="highlightStage === '3'" class="highlighted"><strong>Stage 3:</strong> {{ card.stage_three }}</p>
     </div>
   </div>
 </template>
@@ -17,7 +17,7 @@ defineProps({
     required: true
   },
   highlightStage: {
-    type: Number, // 1, 2, or 3
+    type: String, // 1, 2, or 3
     default: null
   }
 })
@@ -33,10 +33,15 @@ defineProps({
 }
 
 .card-image {
-  max-width: 120px;
   display: block;
   margin: 0.5rem 0;
+
+    /* OR for bigger responsive images, uncomment below */
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
 }
+
 
 .stages p {
   margin: 0.25rem 0;
