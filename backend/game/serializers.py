@@ -71,6 +71,18 @@ class GameEventSerializer(serializers.ModelSerializer):
     event_card = EventCardSerializer(read_only=True)
     invader_card = InvaderCardSerializer(read_only=True)
 
+    title = serializers.SerializerMethodField()
+
+    def get_title(self, obj):
+        if obj.fear_card:
+            return obj.fear_card.name + (" Level: " + obj.terror_level if obj.terror_level else "")
+        elif obj.event_card:
+            return obj.event_card.name
+        elif obj.invader_card:
+            return obj.invader_card.name + " " + str(obj.invader_card.stage)
+        else:
+            return obj.title
+
     fear_card_id = serializers.PrimaryKeyRelatedField(
         queryset=FearCard.objects.all(),
         source='fear_card',

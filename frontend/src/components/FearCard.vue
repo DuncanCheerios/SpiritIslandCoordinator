@@ -1,12 +1,11 @@
 <template>
   <div class="fear-card">
-    <h4>{{ card.name }}</h4>
-    <img v-if="card.image_url" :src="card.image_url" alt="" class="card-image" />
     <div class="stages">
       <p v-if="highlightStage === '1'" class="highlighted"><strong>Stage 1:</strong> {{ card.stage_one }}</p>
       <p v-if="highlightStage === '2'" class="highlighted"><strong>Stage 2:</strong> {{ card.stage_two }}</p>
       <p v-if="highlightStage === '3'" class="highlighted"><strong>Stage 3:</strong> {{ card.stage_three }}</p>
     </div>
+    <img v-if="card.image_url" :src="card.image_url" alt="" class="card-image" />
   </div>
 </template>
 

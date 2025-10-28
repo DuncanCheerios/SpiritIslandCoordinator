@@ -7,17 +7,24 @@
       <div
         v-for="event in events"
         :key="event.id"
+        @click="toggleCollapse(event)"
         class="event-card"
+        style="cursor: pointer;"
       >
-        <strong>{{ event.typeLabel }}</strong> —
-        <span v-if="event.fear_card">{{ event.fear_card.name }}
-          <FearCard :card=event.fear_card :highlight-stage="event.terror_level "/>
-        </span>
+        <div class="event-header">
+          <strong>{{ event.typeLabel }} - {{ event.title }}</strong>
+          <span style="float: right;">{{ event.collapsed ? '+' : '–' }}</span>
+        </div>
+        <div v-show="!event.collapsed" class="event-content">
+          <span v-if="event.fear_card">{{ event.fear_card.name }}
+            <FearCard :card=event.fear_card :highlight-stage="event.terror_level "/>
+          </span>
 
-        <span v-else-if="event.event_card">{{ event.event_card.name }}</span>
-        <span v-else-if="event.invader_card">{{event.description}} at {{ event.invader_card.name }}</span>
-        <span v-else>{{ event.title }}</span>
-        <small class="timestamp">({{ formatDate(event.created_at) }})</small>
+          <span v-else-if="event.event_card">{{ event.event_card.name }}</span>
+          <span v-else-if="event.invader_card">{{event.description}} at {{ event.invader_card.name }}</span>
+          <span v-else>{{ event.title }}</span>
+          <small class="timestamp">({{ formatDate(event.created_at) }})</small>
+        </div>
       </div>
     </div>
     <div v-else>
@@ -148,7 +155,12 @@ async function loadEvents() {
   events.value = data.map(e => ({
     ...e,
     typeLabel: e.type.charAt(0).toUpperCase() + e.type.slice(1),
+    collapsed: true
   }))
+}
+
+function toggleCollapse(event) {
+  event.collapsed = !event.collapsed
 }
 
 async function loadFearCards() {
@@ -217,7 +229,7 @@ function formatDate(isoString) {
   border-radius: 8px;
 }
 .event-list {
-  max-height: 300px;
+  max-height: 1000px;
   overflow-y: auto;
   margin-bottom: 1rem;
 }
