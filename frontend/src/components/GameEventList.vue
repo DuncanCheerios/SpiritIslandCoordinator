@@ -10,7 +10,10 @@
         class="event-card"
       >
         <strong>{{ event.typeLabel }}</strong> —
-        <span v-if="event.fear_card">{{ event.fear_card.name }}</span>
+        <span v-if="event.fear_card">{{ event.fear_card.name }}
+          <FearCard :card=event.fear_card :highlight-stage="event.terror_level "/>
+        </span>
+
         <span v-else-if="event.event_card">{{ event.event_card.name }}</span>
         <span v-else-if="event.invader_card">{{event.description}} at {{ event.invader_card.name }}</span>
         <span v-else>{{ event.title }}</span>
@@ -46,6 +49,11 @@
             :value="card.id"
           >
             {{ card.name }}
+          </option>
+        </select>
+        <select v-model="newEvent.terror_level" id="stage">
+          <option v-for="s in [1, 2, 3]" :key="s" :value="s">
+            Terror Level {{ s }}
           </option>
         </select>
       </div>
@@ -97,8 +105,8 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import axios from 'axios'
 import api from "@/api/axios.js";
+import FearCard from "@/components/FearCard.vue";
 
 // Props
 const props = defineProps({
@@ -120,6 +128,7 @@ const newEvent = ref({
   fear_card_id: null,
   event_card_id: null,
   invader_card_id: null,
+  terror_level: null, // 1,2,3
   title: '',
   description: '',
 })
@@ -164,6 +173,7 @@ async function createEvent() {
 
     if (newEvent.value.type === 'fear') {
       payload.fear_card_id = newEvent.value.fear_card_id
+      payload.terror_level = newEvent.value.terror_level
     } else if (newEvent.value.type === 'event') {
       payload.event_card_id = newEvent.value.event_card_id
     } else if (newEvent.value.type === 'invader') {
@@ -188,6 +198,7 @@ function resetForm() {
     fear_card_id: null,
     event_card_id: null,
     invader_card_id: null,
+    terror_level: null,
     title: '',
     description: '',
   }

@@ -92,6 +92,7 @@ class GameEventSerializer(serializers.ModelSerializer):
             'description',
             'fear_card',
             'fear_card_id',
+            'terror_level',
             'event_card',
             'event_card_id',
             'invader_card_id',

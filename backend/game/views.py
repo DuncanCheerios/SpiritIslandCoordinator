@@ -25,7 +25,6 @@ class JoinGameAPIView(APIView):
 
     def post(self, request, pk):
         try:
-            print(pk)
             game = Game.objects.get(pk=pk)
         except Game.DoesNotExist:
             return Response({"detail": "Game not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -75,7 +74,6 @@ class GameEventListCreateView(generics.ListCreateAPIView):
         return GameEvent.objects.filter(game_id=self.kwargs['game_id']).order_by('created_at')
 
     def perform_create(self, serializer):
-        print('supsupsup')
         serializer.save(game_id=self.kwargs['game_id'])
 
 

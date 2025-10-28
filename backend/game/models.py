@@ -25,12 +25,19 @@ class GameEvent(models.Model):
         ('custom', 'Custom'),
     ]
 
+    TERROR_LEVELS = [
+        ("1", "Terror Level 1"),
+        ("2", "Terror Level 2"),
+        ("3", "Terror Level 3"),
+    ]
+
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='events')
     type = models.CharField(max_length=20, choices=EVENT_TYPES)
     created_at = models.DateTimeField(auto_now_add=True)
 
     # optional foreign keys depending on type
     fear_card = models.ForeignKey('FearCard', null=True, blank=True, on_delete=models.SET_NULL)
+    terror_level = models.CharField(max_length=3, choices=TERROR_LEVELS, null=True)
     event_card = models.ForeignKey('EventCard', null=True, blank=True, on_delete=models.SET_NULL)
     invader_card = models.ForeignKey('InvaderCard', null=True, blank=True, on_delete=models.SET_NULL)
 
